@@ -18,3 +18,13 @@ Changes file_name and ten_power to generate files with 10**ten_power records
 # Install dependencies for Flask server
 pip install -r dependencies.txt
 
+# Setup
+create config.py using config.template.py and add appropriate path in "search_directory" key
+
+# Start flask server
+python app.py. 
+
+It should load run the server on port 5000 by default. 
+
+Test by going to http://localhost:5000/fs/ls  - this should list down the files in the search_directory mentioned in config.py
+
