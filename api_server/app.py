@@ -1,11 +1,9 @@
 from flask import Flask
+from file_system_blueprint import fs_bp
 
 app = Flask(__name__)
 
-
-@app.route('/')
-def hello():
-    return 'Hello, World!'
+app.register_blueprint(fs_bp, url_prefix='/fs')
 
 
 if __name__ == "__main__":

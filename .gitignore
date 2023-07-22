@@ -131,3 +131,8 @@ dist
 
 # virtual environments
 log-venv
+
+# pycache
+__pycache__
+*.pyc
+
