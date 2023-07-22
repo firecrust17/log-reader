@@ -136,3 +136,5 @@ log-venv
 __pycache__
 *.pyc
 
+# config file
+config.py
