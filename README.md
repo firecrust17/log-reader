@@ -59,3 +59,12 @@ Test by going to http://localhost:5000/fs/ls  - this should list down the files 
             "log record 4"
         ]
     }
+
+# Angular App
+
+- cd app_interface/log-viewer/src/app
+- npm i
+- ng serve --port 4444 --poll=2000 --watch
+
+The app will load on http://localhost:4444
+
