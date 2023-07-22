@@ -33,3 +33,29 @@ It should load run the server on port 5000 by default.
 
 Test by going to http://localhost:5000/fs/ls  - this should list down the files in the search_directory mentioned in config.py
 
+# ENDPOINTS
+
+/fs/ls
+- Empty request payload
+- Response format - list of objects - check file_system_blueprint.py
+
+/fs/ls_files
+- Empty request payload
+- Response format - list of strings (file names) - check file_system_blueprint.py
+
+/search/search_log/v1
+- Request Payload Parameters
+    - filename [Mandatory]
+    - keyword [Optional]
+    - count [Optional]
+- Response Format
+    {
+        err_code: 0,  # 0 for success, !0 for error
+        message: "Success / Error Message",
+        data: [
+            "log record 1",
+            "log record 2",
+            "log record 3",
+            "log record 4"
+        ]
+    }
