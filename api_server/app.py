@@ -7,7 +7,7 @@ app = Flask(__name__)
 # Needed to display file names for selection on Frontend
 app.register_blueprint(fs_bp, url_prefix='/fs')
 
-# Needed to display file names for selection on Frontend
+# Needed to perform search on files with parameters
 app.register_blueprint(search_bp, url_prefix='/search')
 
 
