@@ -3,6 +3,11 @@
 This repository intends to read log files from /var/log folder on any server.
 It can read files, check for matching keywords in each line and return requested number of rows in latest first order.
 
+# Assumptions
+- We are only searching for files in /var/log , not going inside folders
+- One row in log file is one log record (no multi-line log)
+- Log file only contains logs - no other entries like heading and footers
+
 Setup Steps
 
 # Create virtual env
