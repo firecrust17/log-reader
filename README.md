@@ -15,3 +15,6 @@ source log-venv/bin/activate
 use api_server/scripts/create_test_file.py to create sample test files
 Changes file_name and ten_power to generate files with 10**ten_power records
 
+# Install dependencies for Flask server
+pip install -r dependencies.txt
+
