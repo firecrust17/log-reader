@@ -35,11 +35,15 @@ Response:
 [
     {
         "type": "file",
-        "name": "abc.txt"
+        "name": "abc.txt",
+		"size": "10 MB",
+		"extension": "log"
     },
     {
         "type": "folder",
-        "name": "folder1"
+        "name": "folder1",
+		"size": "1 GB",
+		"extension": "log"
     }
 ]
 
