@@ -128,3 +128,18 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# virtual environments
+log-venv
+
+# pycache
+__pycache__
+*.pyc
+
+# config file
+config.py
+
+
+# Angular
+package-lock.json
+logo.svg
