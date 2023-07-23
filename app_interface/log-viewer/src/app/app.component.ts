@@ -20,14 +20,18 @@ export class AppComponent implements OnInit {
   active_btn: String = 'v3';
   payload: any;
 
-  file_list = [];
+  searchPerformed: boolean = false;
+  isLoading: boolean = false;
+
+  file_list: any = [];
   log_data = [];
   
   init_payload() {
+    this.searchPerformed = false;
     this.payload = {
       filename: null,
       keyword: "",
-      count: 0,
+      count: 10,
       chunk_size: 100
     }
   }
@@ -39,7 +43,10 @@ export class AppComponent implements OnInit {
   search(){
     if(this.payload.filename == null){
       alert("File name is Mandatory!");
+      return false;
     }
+    this.searchPerformed = true;
+    this.isLoading = true;
     let request:any  = this.payload
     if(request.keyword == '') delete(request.keyword)
     if(request.coumt == 0) delete(request.count)
@@ -47,7 +54,9 @@ export class AppComponent implements OnInit {
     this.ds.retrieve_logs(this.active_btn, request)
     .subscribe((res: any) =>{
       this.log_data = res.data;
+      this.isLoading = false;
     });
+    return false;
   }
 
   fetch_file_list() {

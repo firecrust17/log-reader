@@ -9,7 +9,7 @@ export class DataService {
   constructor(private http: HttpClient) { }
 
   fetch_file_list() {
-    const endpoint = 'http://localhost:5000/fs/ls/files_only';
+    const endpoint = 'http://localhost:5000/fs/list_all';
     return this.http.get<DataService>(endpoint);
   }
 
