@@ -19,7 +19,18 @@
 
 
 <div class="text-bg-info">
-  Show file names here for selection
+  <div class="container-fluid">
+    <div class="row p-1">
+      <span class="col-3" *ngIf="file_list.length == 0">
+        No files present in the directory
+      </span>
+      <div class="col-3" *ngFor="let file of file_list">
+        <!-- <button class="btn btn-primary btn-sm mt-2"> -->
+          <input type="radio" id="{{file}}" [(ngModel)]="payload.filename" value="{{file}}"> &nbsp; <label for="{{file}}">{{file}}</label>
+        <!-- </button> -->
+      </div>
+    </div>
+  </div>
   <hr>
   <form class="d-flex p-3 pt-0" role="search">
     <input class="form-control me-2" [(ngModel)]="payload.keyword" name="keyword" type="search" placeholder="Enter Search Keyword Here" aria-label="Search">
@@ -35,6 +46,7 @@
     <button class="btn btn-danger" type="submit" (click)="init_payload()">Reset </button>
   </form>
 </div>
-
+<!-- {{payload | json}} -->
+{{log_data | json}}
 
 <router-outlet></router-outlet>

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { DataService } from './services/data.service';
 
 @Component({
@@ -6,10 +6,13 @@ import { DataService } from './services/data.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
 
   constructor(private ds: DataService) {
     this.init_payload();
+  }
+
+  ngOnInit(): void {
     this.fetch_file_list();
   }
 
@@ -37,7 +40,11 @@ export class AppComponent {
     if(this.payload.filename == null){
       alert("File name is Mandatory!");
     }
-    this.ds.retrieve_logs(this.active_btn)
+    let request:any  = this.payload
+    if(request.keyword == '') delete(request.keyword)
+    if(request.coumt == 0) delete(request.count)
+
+    this.ds.retrieve_logs(this.active_btn, request)
     .subscribe((res: any) =>{
       this.log_data = res.data;
     });
@@ -46,7 +53,7 @@ export class AppComponent {
   fetch_file_list() {
     this.ds.fetch_file_list()
     .subscribe((res: any) =>{
-      this.log_data = res.data;
+      this.file_list = res;
     });
   }
 

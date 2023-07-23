@@ -9,13 +9,13 @@ export class DataService {
   constructor(private http: HttpClient) { }
 
   fetch_file_list() {
-    const endpoint = 'http://localhost:5000/fs/ls_files';
+    const endpoint = 'http://localhost:5000/fs/ls/files_only';
     return this.http.get<DataService>(endpoint);
   }
 
-  retrieve_logs(version: String) {
+  retrieve_logs(version: String, payload: any) {
     const endpoint = 'http://localhost:5000/search/search_log/'+version;
-    return this.http.get<DataService>(endpoint);
+    return this.http.get<DataService>(endpoint, {params: payload});
   }
 
 
