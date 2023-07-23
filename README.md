@@ -68,3 +68,5 @@ Test by going to http://localhost:5000/fs/ls  - this should list down the files 
 
 The app will load on http://localhost:4444
 
+# Logo
+Add a logo with name "logo.svg" in app_interface/log-viewer/src/assets/
