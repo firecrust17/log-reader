@@ -54,7 +54,17 @@ def list_all():
 		if os.path.isdir(os.path.join(conf['search_directory'], item)):
 			result.append({"type": "folder", "name": item})
 		if os.path.isfile(os.path.join(conf['search_directory'], item)):
-			result.append({"type": "file", "name": item})
+			size = os.path.getsize(os.path.join(conf['search_directory'], item))
+			ext = item.split('.')[-1]
+			
+			if size < 500000:
+				size = str(round(size / 1000, 2)) + ' KB'
+			elif size < 500000000:
+				size = str(round(size / (1000*1000), 2)) + ' MB'
+			elif size >= 500000000:
+				size = str(round(size / (1000*1000*1000), 2)) + ' GB'
+
+			result.append({"type": "file", "name": item, "size": size, "extension": ext})
 
 	# print(result)
 	return result

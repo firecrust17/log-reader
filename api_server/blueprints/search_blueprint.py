@@ -43,8 +43,9 @@ def search_log_v1():
         with open(full_file_name) as file:
             result = []
             if keyword:
+                keyword = keyword.lower().strip()
                 for line in file:
-                    if keyword in line:     # substring matching
+                    if keyword in line.lower():     # substring matching
                         result.append(line)
             else:
                 for line in file:
@@ -97,8 +98,9 @@ def search_log_v2():
         with open(full_file_name) as file:
             result = {}
             if keyword:
+                keyword = keyword.lower().strip()
                 for line in file:
-                    if keyword in line:     # substring matching
+                    if keyword in line.lower():     # substring matching
                         result[matches] = line
                         matches += 1
 
@@ -127,11 +129,24 @@ def search_log_v2():
 Process data for matching - used in v3
 '''
 def check_if_keyword_matches(line, keyword):
+    line = line.lower()
     if keyword:
-        if keyword in line:
-            return True
+        keyword_array = [kw.strip() for kw in keyword.lower().split('and')]
+        if len(keyword_array) == 1:
+            kw = keyword_array[0]
+            return True if kw in line else  False
         else:
-            return False
+            all_match = True
+            for kw in keyword_array:
+                if kw not in line:
+                    all_match = False
+            
+            return True if all_match else False
+
+        # if keyword in line.lower():
+        #     return True
+        # else:
+        #     return False
     
     # if keyword is None - line is valid
     else:
@@ -145,6 +160,10 @@ Memory and Compute Optimisation
 Reading file in reverse in chunks using pointers
 Identifies one line at a time and processes it. 
 Returns when count reached.
+
+Cons:
+    Processes only one line even if the chunk has multiple lines
+    If there are enough matches in the entire file, it takes more time as reading from bottom to up is less efficient
 
 Benchmarking
 100 Million records - 10 GB file - 3000 count (no keywords) - 100 chunk size
@@ -253,107 +272,3 @@ def search_log_v3():
             return {"err_code": 0, "message": "Data successfully fetched", "data": result}
     else:
         return {"err_code": 1, "message": "File name not provided", "data": []}
-
-            ########################################################
-
-
-            # if curr_ptr < chunk_size:
-            #     fp.seek(0, 0)
-            #     x = fp.read().decode("utf-8").split('\n')[::-1]
-            #     x = [rec for rec in x if rec != '']
-            #     print(x)
-            #     return {}
-            
-            # while fp.tell() > chunk_size:
-            #     fp.seek((-1*chunk_size), 1)
-            #     data = fp.read(chunk_size)
-            #     print(data, data.split(b'\n'))
-            #     skip_merge = False
-            #     if data.split(b'\n')[-1] == b'':
-            #         skip_merge = True
-            #     x = [rec.decode("utf-8") for rec in data.split(b'\n') if rec != b'']
-            #     # print(x)
-            #     fp.seek((-1*chunk_size), 1)
-
-            # return {}
-
-
-            #############################################################3
-
-
-            # move to last \n - should not be required
-            # fp.seek((-1*chunk_size), 1)
-            # n = fp.read(chunk_size).rfind(b'\n')
-            # curr_ptr = curr_ptr - chunk_size + n
-            # prev_ptr = curr_ptr
-            # fp.seek(curr_ptr, 0)
-            
-
-            # print(curr_ptr)
-            # print(fp.read(chunk_size))
-            # print(fp.tell())
-
-            # while fp.tell() > chunk_size:
-            #     fp.seek((-1*chunk_size), 1)
-            #     read_size = curr_ptr - fp.tell()
-            #     data = fp.read(read_size)
-            #     nl = data.rfind(b'\n')
-                
-            #     # print(data)
-            #     # return {}
-            #     # print(nl)
-            #     if nl == -1:    # if no \n - undo read()
-            #         fp.seek((-1*read_size), 1)
-            #     else:
-            #         curr_ptr = curr_ptr - read_size + nl
-            #         # fp.seek(curr_ptr, 0)
-            #         length = prev_ptr - curr_ptr
-            #         print(fp.read(length))
-            #         fp.seek(curr_ptr, 0)
-            #         prev_ptr = curr_ptr
-                    
-            #         # fp.seek(curr_ptr, 0)
-            #         # # print(curr_ptr)
-            #         # len = curr_ptr - fp.tell() - (nl + 1)
-            #         # print(fp.read(len))
-
-            #         # curr_ptr = curr_ptr - chunk_size + nl - 1
-            #         # fp.seek(curr_ptr, 0)
-            #         # print(fp.read(last_ptr-curr_ptr))
-            #         # fp.seek(curr_ptr-1, 0)
-                
-                
-            #     # fp.seek((-1*chunk_size), 1)
-                
-            # # print()
-
-
-
-
-            # return {"err_code": 0, "message": "Data successfully fetched", "data": result}
-            
-            
-            
-            
-            # result = {}
-            # if keyword:
-            #     for line in infile:
-            #         if keyword in line:     # substring matching
-            #             result[matches] = line
-            #             matches += 1
-            #             if matches > count:
-            #                 del(result[matches-count-1])
-            #             # print(result)
-            # else:
-            #     for line in infile:
-            #         result[matches] = line
-            #         matches += 1
-            #         if matches > count:
-            #             del(result[matches-count-1])
-            # result = list(result.values())[::-1]
-            
-            # return {"err_code": 0, "message": "Data successfully fetched", "data": result}
-
-    # else :
-    #     return {"err_code": 1, "message": "File name not provided", "data": []}
-
