@@ -7,6 +7,8 @@ from flask import Blueprint
 search_bp = Blueprint('search', __name__)
 CORS(search_bp, supports_credentials=True)
 
+################# VERSION 1 BELOW #################
+
 '''
 Basic Method
 Takes a filename [Mandatory]
@@ -61,6 +63,7 @@ def search_log_v1():
     else :
         return {"err_code": 1, "message": "File name is mandatory.", "data": []}
 
+################# VERSION 2 BELOW #################
 
 '''
 Memory optimisation - reducing the size of "result" variable when there are too many matching records
@@ -122,8 +125,7 @@ def search_log_v2():
     else :
         return {"err_code": 1, "message": "File name not provided", "data": []}
 
-
-
+################# VERSION 3 BELOW #################
 
 '''
 Process data for matching - used in v3
@@ -131,7 +133,11 @@ Process data for matching - used in v3
 def check_if_keyword_matches(line, keyword):
     line = line.lower()
     if keyword:
-        keyword_array = [kw.strip() for kw in keyword.lower().split('and')]
+        keyword_array = [kw.strip().lower() for kw in keyword.split(' AND ')]
+        keyword_array.remove('')
+        print(keyword_array)
+        
+        # if no AND operator, search directly without looping
         if len(keyword_array) == 1:
             kw = keyword_array[0]
             return True if kw in line else  False
@@ -143,11 +149,6 @@ def check_if_keyword_matches(line, keyword):
             
             return True if all_match else False
 
-        # if keyword in line.lower():
-        #     return True
-        # else:
-        #     return False
-    
     # if keyword is None - line is valid
     else:
         return True
