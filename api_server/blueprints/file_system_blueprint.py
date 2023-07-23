@@ -61,6 +61,7 @@ def list_all():
 			size = os.path.getsize(os.path.join(conf['search_directory'], item))
 			ext = item.split('.')[-1]
 			
+			byte_size = size
 			if size < 500000:
 				size = str(round(size / 1000, 2)) + ' KB'
 			elif size < 500000000:
@@ -68,7 +69,10 @@ def list_all():
 			elif size >= 500000000:
 				size = str(round(size / (1000*1000*1000), 2)) + ' GB'
 
-			result.append({"type": "file", "name": item, "size": size, "extension": ext})
+			result.append({"type": "file", "name": item, "size": size, "byte_size": byte_size, "extension": ext})
+
+	result.sort(key=lambda x: x['byte_size'])
+
 
 	# print(result)
 	return result

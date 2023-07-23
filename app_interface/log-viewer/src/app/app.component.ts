@@ -36,7 +36,8 @@ export class AppComponent implements OnInit {
     }
   }
 
-  setActive(btn: String){
+  setActive(btn: String, el: any){
+    this.focus_input(el)
     this.active_btn = btn;
   }
 
@@ -64,6 +65,10 @@ export class AppComponent implements OnInit {
     .subscribe((res: any) =>{
       this.file_list = res;
     });
+  }
+
+  focus_input(el: any){
+    el.focus();
   }
 
 }

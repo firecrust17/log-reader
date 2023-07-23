@@ -4,13 +4,13 @@
       <img style="width: 100px;" src="../assets/logo.svg" alt="logo">
     </a>
     <form class="d-flex justify-content-start">
-      <button class="btn me-2" (click)="setActive('v1')" 
+      <button class="btn me-2" (click)="setActive('v1', keyword_input)" 
       [ngClass]="{'btn-info': active_btn == 'v1', 'btn-secondary': active_btn != 'v1'}" 
       type="button">Search V1</button>
-      <button class="btn me-2" (click)="setActive('v2')" 
+      <button class="btn me-2" (click)="setActive('v2', keyword_input)" 
       [ngClass]="{'btn-info': active_btn == 'v2', 'btn-secondary': active_btn != 'v2'}" 
       type="button">Search V2</button>
-      <button class="btn me-2" (click)="setActive('v3')" 
+      <button class="btn me-2" (click)="setActive('v3', keyword_input)" 
       [ngClass]="{'btn-info': active_btn == 'v3', 'btn-secondary': active_btn != 'v3'}" 
       type="button">Search V3</button>
     </form>
@@ -29,7 +29,7 @@
         
         <div class="col-3" *ngIf="file.extension == 'log'">
           <input type="radio" id="{{file.name}}" [(ngModel)]="payload.filename" 
-            value="{{file.name}}"> &nbsp; 
+            value="{{file.name}}" (click)="focus_input(keyword_input)"> &nbsp; 
           <label for="{{file.name}}">{{file.name}} ({{file.size}})</label>
         </div>
 
@@ -38,7 +38,7 @@
   </div>
   <hr>
   <form class="d-flex p-3 pt-0" role="search">
-    <input class="form-control me-2" [(ngModel)]="payload.keyword" name="keyword" type="search" placeholder="Search Keywords (Eg: two AND denmark)" aria-label="Search">
+    <input class="form-control me-2" [(ngModel)]="payload.keyword" #keyword_input name="keyword" type="search" placeholder="Search Keywords (Eg: two AND denmark)" aria-label="Search">
     <select class="form-control me-2" [(ngModel)]="payload.count" name="count">
       <option value="0">All Records</option>
       <option value="10">Top 10 Records</option>

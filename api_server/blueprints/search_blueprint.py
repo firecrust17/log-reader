@@ -20,13 +20,6 @@ Takes a count [Optional]
     if present - returns N (count) valid records - starting from the bottom of the file
     if NOT present - returns all valid records - starting from the bottom of the file
 
-Benchmarking
-100 Million records - 10 GB file - 3000 count - took ~5 GB memory
-    Response in 31 seconds
-10 Million records - 1 GB file (no keyword) - 30000 count
-    Response in 4.8 seconds
-10 Million records - 1 GB file (with keyword) - 30000 count
-    Response in 4.3 seconds
 '''
 @search_bp.route("/search_log/v1")
 def search_log_v1():
@@ -73,13 +66,6 @@ CONS:
 Is slightly slower to execute due to extra computes but uses much less memory
 Also. will take more memory if we need to return large number of records, compared to v1
 
-Benchmarking
-100 Million records - 10 GB file - 3000 count (no keywords) - memory doesn't increase, CPU is also neutral
-    Response in 30 seconds
-10 Million records - 1 GB file - 30000 count (no keywords) - memory doesn't increase, CPU is also neutral
-    Response in 5.8 seconds
-10 Million records - 1 GB file - 30000 count (with keyword) - memory doesn't increase, CPU is also neutral
-    Response in 4.5 seconds
 '''
 @search_bp.route("/search_log/v2")
 def search_log_v2():
@@ -129,13 +115,15 @@ def search_log_v2():
 
 '''
 Process data for matching - used in v3
+Searches for all keywords. AND is an operator
+"two AND denmark" search keyword will find all records that have two annd denmark both
+
 '''
 def check_if_keyword_matches(line, keyword):
     line = line.lower()
     if keyword:
         keyword_array = [kw.strip().lower() for kw in keyword.split(' AND ')]
-        keyword_array.remove('')
-        print(keyword_array)
+        # print(keyword_array)
         
         # if no AND operator, search directly without looping
         if len(keyword_array) == 1:
@@ -165,19 +153,6 @@ Returns when count reached.
 Cons:
     Processes only one line even if the chunk has multiple lines
     If there are enough matches in the entire file, it takes more time as reading from bottom to up is less efficient
-
-Benchmarking
-100 Million records - 10 GB file - 3000 count (no keywords) - 100 chunk size
-    Response in 100-200 ms - memory doesn't increase, CPU goes up for some time
-100 Million records - 10 GB file - 3000 count (WITH keywords) - 100 chunk size
-    Response in 250-750 ms - memory doesn't increase, CPU goes up for some time
-
-
-MAX
-100 Million records - 10 GB file - 30000 count (no keywords) - 100 chunk size
-    Response in 2.3 seconds - memory doesn't increase, HIGH CPU
-100 Million records - 10 GB file - 30000 count (WITH keywords) - 100 chunk size
-    Response in 3.1 seconds - memory doesn't increase, CPU is also neutral
 
 '''
 @search_bp.route("/search_log/v3")
