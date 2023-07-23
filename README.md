@@ -35,19 +35,23 @@ Test by going to http://localhost:5000/fs/ls  - this should list down the files 
 
 # ENDPOINTS
 
-/fs/ls
+/fs/ls/files_only
 - Empty request payload
 - Response format - list of objects - check file_system_blueprint.py
 
-/fs/ls_files
+/fs/list_all
 - Empty request payload
 - Response format - list of strings (file names) - check file_system_blueprint.py
 
 /search/search_log/v1
+/search/search_log/v2
+/search/search_log/v3
+
 - Request Payload Parameters
     - filename [Mandatory]
     - keyword [Optional]
     - count [Optional]
+    - chunk_size [Optional] - only in v3
 - Response Format
     {
         err_code: 0,  # 0 for success, !0 for error

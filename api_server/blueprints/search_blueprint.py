@@ -1,9 +1,11 @@
 import os
 from config import conf
 from flask import request
+from flask_cors import CORS
 
 from flask import Blueprint
 search_bp = Blueprint('search', __name__)
+CORS(search_bp, supports_credentials=True)
 
 '''
 Basic Method
@@ -24,7 +26,7 @@ Benchmarking
 10 Million records - 1 GB file (with keyword) - 30000 count
     Response in 4.3 seconds
 '''
-@search_bp.route('/search_log/v1/')
+@search_bp.route("/search_log/v1")
 def search_log_v1():
     # query parameters
     filename = request.args.get('filename', None)
@@ -32,12 +34,12 @@ def search_log_v1():
     count = int(request.args.get('count', 0))
     # print(filename, keyword, count)
 
-    # check if filename exists - error out if it doesn't
-    full_file_name = os.path.join(conf['search_directory'],filename)
-    if not os.path.isfile(full_file_name):
-        return {"err_code": -1, "message": "File does not exist.", "data": []}
-
     if filename:
+        # check if filename exists - error out if it doesn't
+        full_file_name = os.path.join(conf['search_directory'],filename)
+        if not os.path.isfile(full_file_name):
+            return {"err_code": -1, "message": "File does not exist.", "data": []}
+
         with open(full_file_name) as file:
             result = []
             if keyword:
@@ -75,7 +77,7 @@ Benchmarking
 10 Million records - 1 GB file - 30000 count (with keyword) - memory doesn't increase, CPU is also neutral
     Response in 4.5 seconds
 '''
-@search_bp.route('/search_log/v2/')
+@search_bp.route("/search_log/v2")
 def search_log_v2():
     # query parameters
     filename = request.args.get('filename', None)
@@ -83,14 +85,15 @@ def search_log_v2():
     count = int(request.args.get('count', 0))
     # print(filename, keyword, count)
 
-    # check if filename exists - error out if it doesn't
-    full_file_name = os.path.join(conf['search_directory'],filename)
-    if not os.path.isfile(full_file_name):
-        return {"err_code": -1, "message": "File does not exist.", "data": []}
 
     matches = 0
 
     if filename:
+        # check if filename exists - error out if it doesn't
+        full_file_name = os.path.join(conf['search_directory'],filename)
+        if not os.path.isfile(full_file_name):
+            return {"err_code": -1, "message": "File does not exist.", "data": []}
+
         with open(full_file_name) as file:
             result = {}
             if keyword:
@@ -100,14 +103,14 @@ def search_log_v2():
                         matches += 1
 
                         # if dictionary size increases more than count, remove previous records on each new insertion
-                        if matches > count:
+                        if (count != 0) and (matches > count):
                             del(result[matches-count-1])
                         # print(result)
             else:
                 for line in file:
                     result[matches] = line
                     matches += 1
-                    if matches > count:
+                    if (count != 0) and (matches > count):
                         del(result[matches-count-1])
             result = list(result.values())[::-1]
             # print(result)
@@ -157,7 +160,7 @@ MAX
     Response in 3.1 seconds - memory doesn't increase, CPU is also neutral
 
 '''
-@search_bp.route('/search_log/v3/')
+@search_bp.route("/search_log/v3")
 def search_log_v3():
     # query parameters
     filename = request.args.get('filename', None)
@@ -166,14 +169,15 @@ def search_log_v3():
     chunk_size = int(request.args.get('chunk_size', 100)) # new - no. of bytes to read in each loop
     # print(filename, keyword, count, chunk_size)
 
-    # check if filename exists - error out if it doesn't
-    full_file_name = os.path.join(conf['search_directory'],filename)
-    if not os.path.isfile(full_file_name):
-        return {"err_code": -1, "message": "File does not exist.", "data": []}
 
     matches = 0
 
     if filename:
+        # check if filename exists - error out if it doesn't
+        full_file_name = os.path.join(conf['search_directory'],filename)
+        if not os.path.isfile(full_file_name):
+            return {"err_code": -1, "message": "File does not exist.", "data": []}
+        
         with open(full_file_name, 'rb') as fp:
             
             curr_ptr = fp.seek(0, 2)    # go to end of file

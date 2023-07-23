@@ -1,8 +1,10 @@
 import os
 from config import conf
+from flask_cors import CORS
 
 from flask import Blueprint
 fs_bp = Blueprint('file_system', __name__)
+CORS(fs_bp, supports_credentials=True)
 
 
 '''
@@ -13,17 +15,17 @@ Response:
 
 Can parameterise to move deeper into the file system - conf['search_directory'] will be root
 '''
-@fs_bp.route('/ls_files/')
+@fs_bp.route("/ls/files_only")
 def list_files():
-    result = []
-    ls_data = os.listdir(conf['search_directory'])
+	result = []
+	ls_data = os.listdir(conf['search_directory'])
 
-    for item in ls_data:
-        if os.path.isfile(os.path.join(conf['search_directory'], item)):
-            result.append(item)
-    
-    # print(result)
-    return result
+	for item in ls_data:
+		if os.path.isfile(os.path.join(conf['search_directory'], item)):
+			result.append(item)
+
+	# print(result)
+	return result
     
 
 '''
@@ -43,17 +45,16 @@ Response:
 
 Can parameterise to move deeper into the file system - conf['search_directory'] will be root
 '''
-@fs_bp.route('/ls/')
+@fs_bp.route("/list_all")
 def list_all():
-    result = []
-    ls_data = os.listdir(conf['search_directory'])
+	result = []
+	ls_data = os.listdir(conf['search_directory'])
 
-    for item in ls_data:
-        if os.path.isdir(os.path.join(conf['search_directory'], item)):
-            result.append({"type": "folder", "name": item})
-        if os.path.isfile(os.path.join(conf['search_directory'], item)):
-            result.append({"type": "file", "name": item})
-    
-    # print(result)
-    return result
+	for item in ls_data:
+		if os.path.isdir(os.path.join(conf['search_directory'], item)):
+			result.append({"type": "folder", "name": item})
+		if os.path.isfile(os.path.join(conf['search_directory'], item)):
+			result.append({"type": "file", "name": item})
 
+	# print(result)
+	return result
