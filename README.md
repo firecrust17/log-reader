@@ -10,6 +10,12 @@ It can read files, check for matching keywords in each line and return requested
 
 # Setup Steps
 
+### Clone Repo
+```
+git clone git@github.com:firecrust17/log-reader.git <folder_name>
+cd <folder_name>
+```
+
 ### Create virtual env
 ```
 python3 -m virtualenv log-venv
@@ -26,11 +32,15 @@ Changes `file_name` and `ten_power` to generate files with 10**ten_power records
 
 ### Install dependencies for Flask server
 ```
+cd api_server
 pip install -r dependencies.txt
 ```
 
 ### Setup
 create `config.py` using `config.template.py` and add appropriate path in __`search_directory`__ key
+```
+cp config.template.py config.py
+```
 
 ### Start flask server
 ```
@@ -79,7 +89,7 @@ Test by going to `http://localhost:5000/fs/list_all`  - this should list down th
 ### Angular App
 
 ```
-cd app_interface/log-viewer/src/app
+cd ../app_interface/log-viewer/src/app
 npm i
 ng serve --port 4444 --poll=2000 --watch
 ```
