@@ -37,13 +37,17 @@ Response:
         "type": "file",
         "name": "abc.txt",
 		"size": "10 MB",
-		"extension": "log"
+		"byte_size": 142, 
+		"extension": "log",
+		"read_access": True,
     },
     {
         "type": "folder",
         "name": "folder1",
 		"size": "1 GB",
-		"extension": "log"
+		"byte_size": 1024, 
+		"extension": "log",
+		"read_access": False
     }
 ]
 
