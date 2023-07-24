@@ -55,11 +55,34 @@ Test by going to `http://localhost:5000/fs/list_all`  - this should list down th
 
 `/fs/ls/files_only`
 - Empty request payload
-- Response format - list of objects - check file_system_blueprint.py
+- Response format - list of strings (file names) 
+    ```
+    ["abc.txt", "test.py"]
+    ```
 
 `/fs/list_all`
 - Empty request payload
-- Response format - list of strings (file names) - check file_system_blueprint.py
+- Response format - list of dictionaries
+    ```
+    [
+        {
+            "type": "file",
+            "name": "abc.txt",
+            "size": "10 MB",
+            "byte_size": 142, 
+            "extension": "log",
+            "read_access": True,
+        },
+        {
+            "type": "folder",
+            "name": "folder1",
+            "size": "1 GB",
+            "byte_size": 1024, 
+            "extension": "log",
+            "read_access": False
+        }
+    ]
+    ```
 
 `/search/search_log/v1`
 
