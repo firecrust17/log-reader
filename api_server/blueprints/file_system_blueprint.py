@@ -56,10 +56,13 @@ def list_all():
 
 	for item in ls_data:
 		if os.path.isdir(os.path.join(conf['search_directory'], item)):
-			result.append({"type": "folder", "name": item})
+			result.append({"type": "folder", "name": item, "byte_size": 999999999999999}) # around 1TB
 		if os.path.isfile(os.path.join(conf['search_directory'], item)):
 			size = os.path.getsize(os.path.join(conf['search_directory'], item))
+			read_access = os. access(os.path.join(conf['search_directory'], item), os.R_OK)
 			ext = item.split('.')[-1]
+			if (ext in conf['remove_file_with_ext']) or (size == 0):
+				continue
 			
 			byte_size = size
 			if size < 500000:
@@ -69,7 +72,14 @@ def list_all():
 			elif size >= 500000000:
 				size = str(round(size / (1000*1000*1000), 2)) + ' GB'
 
-			result.append({"type": "file", "name": item, "size": size, "byte_size": byte_size, "extension": ext})
+			result.append({
+				"type": "file", 
+				"name": item, 
+				"size": size, 
+				"byte_size": byte_size, 
+				"extension": ext,
+				"read_access": read_access
+			})
 
 	result.sort(key=lambda x: x['byte_size'])
 
