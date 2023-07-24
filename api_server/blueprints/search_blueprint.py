@@ -167,84 +167,88 @@ def search_log_v3():
 
     matches = 0
 
-    if filename:
-        # check if filename exists - error out if it doesn't
-        full_file_name = os.path.join(conf['search_directory'],filename)
-        if not os.path.isfile(full_file_name):
-            return {"err_code": -1, "message": "File does not exist.", "data": []}
-        
-        with open(full_file_name, 'rb') as fp:
+    try:
+
+        if filename:
+            # check if filename exists - error out if it doesn't
+            full_file_name = os.path.join(conf['search_directory'],filename)
+            if not os.path.isfile(full_file_name):
+                return {"err_code": -1, "message": "File does not exist.", "data": []}
             
-            curr_ptr = fp.seek(0, 2)    # go to end of file
-            end_ptr = curr_ptr
-            
-            result = []
-
-            while True:
-                # move one chunk back
-                fp.seek((-1*chunk_size), 1) # curr = 150
-
-                # read chunk and find last \n
-                temp_read = fp.read(chunk_size)
-                last_slash_n = temp_read.rfind(b'\n')
-
-                # if \n found
-                if last_slash_n != -1:
-                    # move curr to that \n
-                    fp.seek((-1*chunk_size), 1) # curr = 150
-                    fp.read(last_slash_n)
-
-                    # save length (end - curr)
-                    length = end_ptr - fp.tell()
-
-                    # read length
-                    data = fp.read(length).decode("utf-8").lstrip() # lstrip because line starts with \n
-
-                    # process data
-                    # print(data)
-                    if len(data):   # skip processsing empty line
-                        if check_if_keyword_matches(data, keyword):
-                            result.append(data)
-                            if len(result) == count:    # if count is 0, returns entire file
-                                break
-                        # print(data)
-
-
-
-                    # move curr back to
-                    fp.seek((-1*length), 1) # curr = 150
-                    curr_ptr = fp.tell()
-                    end_ptr = curr_ptr
-                    
+            with open(full_file_name, 'rb') as fp:
                 
-                # if \n not found
-                else:
-                    # move back one chunk and continue
-                    fp.seek((-1*chunk_size), 1)
-                    curr_ptr = fp.tell()
-                    if (curr_ptr >= chunk_size):
-                        continue
+                curr_ptr = fp.seek(0, 2)    # go to end of file
+                end_ptr = curr_ptr
+                
+                result = []
 
-                # edge case
-                if (curr_ptr < chunk_size):
-                    # move to start of file
-                    fp.seek(0, 0)
-                    
-                    # read entire length till end
-                    arr = fp.read(end_ptr).decode("utf-8")
-                    # split by \n and reverse
-                    arr = arr.split('\n')[::-1]
+                while True:
+                    # move one chunk back
+                    fp.seek((-1*chunk_size), 1) # curr = 150
 
-                    for data in arr:
+                    # read chunk and find last \n
+                    temp_read = fp.read(chunk_size)
+                    last_slash_n = temp_read.rfind(b'\n')
+
+                    # if \n found
+                    if last_slash_n != -1:
+                        # move curr to that \n
+                        fp.seek((-1*chunk_size), 1) # curr = 150
+                        fp.read(last_slash_n)
+
+                        # save length (end - curr)
+                        length = end_ptr - fp.tell()
+
+                        # read length
+                        data = fp.read(length).decode("utf-8").lstrip() # lstrip because line starts with \n
+
                         # process data
-                        if check_if_keyword_matches(data, keyword):
-                            result.append(data)
-                            if len(result) == count:
-                                break
                         # print(data)
+                        if len(data):   # skip processsing empty line
+                            if check_if_keyword_matches(data, keyword):
+                                result.append(data)
+                                if len(result) == count:    # if count is 0, returns entire file
+                                    break
+                            # print(data)
 
-                    break
-            
-            return {"err_code": 0, "message": "Data successfully fetched", "data": result}
-    else:
-        return {"err_code": 1, "message": "File name not provided", "data": []}
+
+
+                        # move curr back to
+                        fp.seek((-1*length), 1) # curr = 150
+                        curr_ptr = fp.tell()
+                        end_ptr = curr_ptr
+                        
+                    
+                    # if \n not found
+                    else:
+                        # move back one chunk and continue
+                        fp.seek((-1*chunk_size), 1)
+                        curr_ptr = fp.tell()
+                        if (curr_ptr >= chunk_size):
+                            continue
+
+                    # edge case
+                    if (curr_ptr < chunk_size):
+                        # move to start of file
+                        fp.seek(0, 0)
+                        
+                        # read entire length till end
+                        arr = fp.read(end_ptr).decode("utf-8")
+                        # split by \n and reverse
+                        arr = arr.split('\n')[::-1]
+
+                        for data in arr:
+                            # process data
+                            if check_if_keyword_matches(data, keyword):
+                                result.append(data)
+                                if len(result) == count:
+                                    break
+                            # print(data)
+
+                        break
+                
+                return {"err_code": 0, "message": "Data successfully fetched", "data": result}
+        else:
+            return {"err_code": 1, "message": "File name not provided", "data": []}
+    except:
+        return {"err_code": 2, "message": "Error while processing file.", "data": []}
