@@ -48,14 +48,23 @@ export class AppComponent implements OnInit {
     }
     this.searchPerformed = true;
     this.isLoading = true;
+    this.log_data = [];
     let request:any  = this.payload
     if(request.keyword == '') delete(request.keyword)
     if(request.coumt == 0) delete(request.count)
 
     this.ds.retrieve_logs(this.active_btn, request)
     .subscribe((res: any) =>{
-      this.log_data = res.data;
       this.isLoading = false;
+      if(res.err_code == 0){
+        this.log_data = res.data;
+      } else {
+        alert(res.message);
+      }
+    },
+    (err: any) =>{
+      this.isLoading = false;
+      alert("Something went wrong.")
     });
     return false;
   }

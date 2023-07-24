@@ -20,17 +20,17 @@
 
 <div class="text-bg-info">
   <div class="container-fluid">
-    <div class="row p-1">
+    <div class="row p-1" style="max-height: 200px; overflow-y: scroll;">
       <span class="col-3" *ngIf="file_list.length == 0">
         No files present in the directory
       </span>
       
       <ng-container *ngFor="let file of file_list">
         
-        <div class="col-3" *ngIf="file.extension == 'log'">
+        <div class="col-3" *ngIf="file.type == 'file'"> <!-- *ngIf="file.extension == 'log'" -->
           <input type="radio" id="{{file.name}}" [(ngModel)]="payload.filename" 
             value="{{file.name}}" (click)="focus_input(keyword_input)"> &nbsp; 
-          <label for="{{file.name}}">{{file.name}} ({{file.size}})</label>
+          <label for="{{file.name}}" [ngClass]="{'text-danger': file.read_access != true}" >{{file.name}} ({{file.size}})</label>
         </div>
 
       </ng-container>
@@ -39,7 +39,7 @@
   <hr>
   <form class="d-flex p-3 pt-0" role="search">
     <input class="form-control me-2" [(ngModel)]="payload.keyword" #keyword_input name="keyword" type="search" placeholder="Search Keywords (Eg: two AND denmark)" aria-label="Search">
-    <select class="form-control me-2" [(ngModel)]="payload.count" name="count">
+    <select class="form-control me-2" [(ngModel)]="payload.count" (change)="focus_input(keyword_input)" name="count">
       <option value="0">All Records</option>
       <option value="10">Top 10 Records</option>
       <option value="20">Top 20 Records</option>
